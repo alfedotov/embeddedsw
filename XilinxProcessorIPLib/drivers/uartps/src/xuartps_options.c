@@ -325,6 +325,13 @@ u32 XUartPs_IsSending(XUartPs *InstancePtr)
 	Xil_AssertNonvoid(InstancePtr->IsReady == XIL_COMPONENT_IS_READY);
 
 	/*
+	 * If there are bytes still to be transmitted, but transmitter is not
+	 * active already (might occur at high baud rates)
+	 */
+	if (InstancePtr->SendBuffer.RemainingBytes > 0)
+		return TRUE;
+
+	/*
 	 * Read the channel status register to determine if the transmitter is
 	 * active
 	 */
